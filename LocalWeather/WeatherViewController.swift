@@ -14,17 +14,65 @@ class WeatherViewController: UIViewController {
     var weatherManager = WeatherManager()
     var locationWeather: [LocationWeather] = []
     
+    let spinner = UIActivityIndicatorView()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        weatherManager.delegate = self
-        weatherManager.fetchData()
-        
         weatherTableView.register(UINib(nibName: "WeatherTableViewCell", bundle: nil), forCellReuseIdentifier: "WeatherTableViewCell")
+        
+        initSpinner()
+        
+        weatherTableView.refreshControl = {
+            let refreshControl = UIRefreshControl()
+            refreshControl.transform = CGAffineTransform(scaleX: 0.7, y: 0.7)
+            refreshControl.addTarget(self, action: #selector(refresh(sender:)), for: .valueChanged)
+            return refreshControl
+        }()
+        
+        spinner.startAnimating()
+        weatherManager.fetchData { (locationWeather, error) in
+            if let error = error {
+                let alert = UIAlertController(title: "응답 실패", message: "\(error.localizedDescription)\n재시도하시기 바랍니다.", preferredStyle: .alert)
+                let okAction = UIAlertAction(title: "확인", style: .default)
+                alert.addAction(okAction)
+                self.present(alert, animated: true, completion: nil)
+            } else {
+                if let locationWeather = locationWeather {
+                    self.locationWeather = locationWeather
+                    self.weatherTableView.reloadData()
+                }
+                self.spinner.stopAnimating()
+            }
+        }
     }
     
     deinit {
+        spinner.removeFromSuperview()
         locationWeather.removeAll()
+    }
+    
+    func initSpinner() {
+        spinner.hidesWhenStopped = true
+        spinner.center = CGPoint(x:weatherTableView.bounds.size.width / 2, y:weatherTableView.bounds.size.height / 2)
+        weatherTableView.addSubview(spinner)
+    }
+    
+    @objc private func refresh(sender: UIRefreshControl) {
+        weatherManager.fetchData { (locationWeather, error) in
+            if let error = error {
+                let alert = UIAlertController(title: "응답 실패", message: "\(error.localizedDescription)\n재시도하시기 바랍니다.", preferredStyle: .alert)
+                let okAction = UIAlertAction(title: "확인", style: .default)
+                alert.addAction(okAction)
+                self.present(alert, animated: true, completion: nil)
+            } else {
+                if let locationWeather = locationWeather {
+                    self.locationWeather = locationWeather
+                    self.weatherTableView.reloadData()
+                }
+            }
+            sender.endRefreshing()
+        }
     }
 }
 
@@ -49,7 +97,6 @@ extension WeatherViewController: UITableViewDataSource {
             cell.localLabel.text = locationWeather[indexPath.row].locationName
             
             cell.todayWeatherLabel.text = locationWeather[indexPath.row].todayWeather.weatherState
-            print(locationWeather[indexPath.row].todayWeather.weatherImage)
             cell.todayWeatherImageView.kf.setImage(with: URL(string: locationWeather[indexPath.row].todayWeather.weatherImage))
             cell.todayTemperatureLabel.text = locationWeather[indexPath.row].todayWeather.temperature
             cell.todayHumidityLabel.text = locationWeather[indexPath.row].todayWeather.humidity
@@ -61,13 +108,5 @@ extension WeatherViewController: UITableViewDataSource {
         }
         
         return cell
-    }
-}
-
-//MARK: - WeatherManagerDelegate
-extension WeatherViewController: WeatherManagerDelegate {
-    func didUpdateWeatherLocation(locationWeather: [LocationWeather]) {
-        self.locationWeather = locationWeather
-        weatherTableView.reloadData()
     }
 }

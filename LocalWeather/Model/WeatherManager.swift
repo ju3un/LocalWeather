@@ -7,33 +7,50 @@
 
 import Alamofire
 
-protocol WeatherManagerDelegate {
-    func didUpdateWeatherLocation(locationWeather: [LocationWeather])
-}
-
 struct WeatherManager {
     let locationUrl = "https://www.metaweather.com/api/location/search/?query=se"
     let weatherUrl = "https://www.metaweather.com/api/location/"
     
-    var delegate: WeatherManagerDelegate?
+    /// FIX_ME: location + weather -> 데이터 뒤죽박죽
+    func fetchData(completion: @escaping ([LocationWeather]?, Error?) -> Void) {
+        requestLocation { (locations, error) in
+            if let error = error {
+                print("Request failed with error: ", error.localizedDescription)
+                completion(nil, error)
+            } else {
+                if let locations = locations {
+                    requestWeather(locations: locations) { (locationWeather, error) in
+                        if let error = error {
+                            print("Request failed with error: ", error.localizedDescription)
+                            completion(nil, error)
+                        } else {
+                            completion(locationWeather, nil)
+                        }
+                    }
+                }
+            }
+        }
+    }
     
-    func fetchData() {
+    func requestLocation(completion: @escaping ([Location]?, Error?) -> Void) {
         AF.request(self.locationUrl, method: .get).responseData { (response) in
             switch response.result {
             case .success(let data):
                 do {
                     let locations = try JSONDecoder().decode([Location].self, from: data)
-                    requestWeather(locations: locations)
+                    completion(locations, nil)
                 } catch {
                     print("Request failed with error: ", error.localizedDescription)
+                    completion(nil, error)
                 }
             case .failure(let error):
                 print("Request failed with error: ", error.errorDescription ?? "")
+                completion(nil, error)
             }
         }
     }
     
-    func requestWeather(locations: [Location]) {
+    func requestWeather(locations: [Location], completion: @escaping ([LocationWeather]?, Error?) -> Void) {
         var locationWeather: [LocationWeather] = [LocationWeather(locationName: "Local", todayWeather: WeatherModel(weatherState: "", weatherImage: "", temperature: "", humidity: ""), tomorrowWeather: WeatherModel(weatherState: "", weatherImage: "", temperature: "", humidity: ""))]
         for location in locations {
             AF.request(weatherUrl + String(location.woeid), method: .get).responseData { (response) in
@@ -48,13 +65,15 @@ struct WeatherManager {
                         locationWeather.append(LocationWeather(locationName: location.name, todayWeather: todayWeather, tomorrowWeather: tomorrowWeather))
                         
                         if locationWeather.count == locations.count {
-                            delegate?.didUpdateWeatherLocation(locationWeather: locationWeather)
+                            completion(locationWeather, nil)
                         }
                     } catch {
                         print("Request failed with error: ", error.localizedDescription)
+                        completion(nil, error)
                     }
                 case .failure(let error):
                     print("Request failed with error: ", error.errorDescription ?? "")
+                    completion(nil, error)
                 }
             }
         }
