@@ -11,7 +11,7 @@ struct WeatherManager {
     let locationUrl = "https://www.metaweather.com/api/location/search/?query=se"
     let weatherUrl = "https://www.metaweather.com/api/location/"
     
-    /// FIX_ME: location + weather -> 데이터 뒤죽박죽
+    /// FIX_ME: alamofire 비동기라서 데이터가 뒤죽박죽
     func fetchData(completion: @escaping ([LocationWeather]?, Error?) -> Void) {
         requestLocation { (locations, error) in
             if let error = error {
@@ -51,7 +51,7 @@ struct WeatherManager {
     }
     
     func requestWeather(locations: [Location], completion: @escaping ([LocationWeather]?, Error?) -> Void) {
-        var locationWeather: [LocationWeather] = [LocationWeather(locationName: "Local", todayWeather: WeatherModel(weatherState: "", weatherImage: "", temperature: "", humidity: ""), tomorrowWeather: WeatherModel(weatherState: "", weatherImage: "", temperature: "", humidity: ""))]
+        var locationWeatherList: [LocationWeather] = [LocationWeather(locationName: "Local", todayWeather: WeatherModel(weatherState: "", weatherImage: "", temperature: "", humidity: ""), tomorrowWeather: WeatherModel(weatherState: "", weatherImage: "", temperature: "", humidity: ""))]
         for location in locations {
             AF.request(weatherUrl + String(location.woeid), method: .get).responseData { (response) in
                 switch response.result {
@@ -62,10 +62,10 @@ struct WeatherManager {
                         /// FIX_ME: 예외처리 필요
                         let todayWeather = weatherData.consolidatedWeather[0].toWeatherModel()
                         let tomorrowWeather = weatherData.consolidatedWeather[1].toWeatherModel()
-                        locationWeather.append(LocationWeather(locationName: location.name, todayWeather: todayWeather, tomorrowWeather: tomorrowWeather))
+                        locationWeatherList.append(LocationWeather(locationName: location.name, todayWeather: todayWeather, tomorrowWeather: tomorrowWeather))
                         
-                        if locationWeather.count == locations.count {
-                            completion(locationWeather, nil)
+                        if locationWeatherList.count == locations.count {
+                            completion(locationWeatherList, nil)
                         }
                     } catch {
                         print("Request failed with error: ", error.localizedDescription)

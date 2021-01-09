@@ -12,7 +12,7 @@ class WeatherViewController: UIViewController {
     @IBOutlet weak var weatherTableView: UITableView!
     
     var weatherManager = WeatherManager()
-    var locationWeather: [LocationWeather] = []
+    var locationWeatherList: [LocationWeather] = []
     
     let spinner = UIActivityIndicatorView()
     
@@ -39,7 +39,7 @@ class WeatherViewController: UIViewController {
                 self.present(alert, animated: true, completion: nil)
             } else {
                 if let locationWeather = locationWeather {
-                    self.locationWeather = locationWeather
+                    self.locationWeatherList = locationWeather
                     self.weatherTableView.reloadData()
                 }
                 self.spinner.stopAnimating()
@@ -49,7 +49,7 @@ class WeatherViewController: UIViewController {
     
     deinit {
         spinner.removeFromSuperview()
-        locationWeather.removeAll()
+        locationWeatherList.removeAll()
     }
     
     func initSpinner() {
@@ -59,6 +59,9 @@ class WeatherViewController: UIViewController {
     }
     
     @objc private func refresh(sender: UIRefreshControl) {
+        locationWeatherList.removeAll()
+        weatherTableView.reloadData()
+        
         weatherManager.fetchData { (locationWeather, error) in
             if let error = error {
                 let alert = UIAlertController(title: "응답 실패", message: "\(error.localizedDescription)\n재시도하시기 바랍니다.", preferredStyle: .alert)
@@ -67,7 +70,7 @@ class WeatherViewController: UIViewController {
                 self.present(alert, animated: true, completion: nil)
             } else {
                 if let locationWeather = locationWeather {
-                    self.locationWeather = locationWeather
+                    self.locationWeatherList = locationWeather
                     self.weatherTableView.reloadData()
                 }
             }
@@ -79,7 +82,7 @@ class WeatherViewController: UIViewController {
 //MARK: - UITableViewDataSource
 extension WeatherViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return locationWeather.count
+        return locationWeatherList.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -89,22 +92,22 @@ extension WeatherViewController: UITableViewDataSource {
             cell.headerStackView.isHidden = false
             cell.weatherStackView.isHidden = true
             
-            cell.localLabel.text = locationWeather[indexPath.row].locationName
+            cell.localLabel.text = locationWeatherList[indexPath.row].locationName
         } else {
             cell.headerStackView.isHidden = true
             cell.weatherStackView.isHidden = false
             
-            cell.localLabel.text = locationWeather[indexPath.row].locationName
+            cell.localLabel.text = locationWeatherList[indexPath.row].locationName
             
-            cell.todayWeatherLabel.text = locationWeather[indexPath.row].todayWeather.weatherState
-            cell.todayWeatherImageView.kf.setImage(with: URL(string: locationWeather[indexPath.row].todayWeather.weatherImage))
-            cell.todayTemperatureLabel.text = locationWeather[indexPath.row].todayWeather.temperature
-            cell.todayHumidityLabel.text = locationWeather[indexPath.row].todayWeather.humidity
+            cell.todayWeatherLabel.text = locationWeatherList[indexPath.row].todayWeather.weatherState
+            cell.todayWeatherImageView.kf.setImage(with: URL(string: locationWeatherList[indexPath.row].todayWeather.weatherImage))
+            cell.todayTemperatureLabel.text = locationWeatherList[indexPath.row].todayWeather.temperature
+            cell.todayHumidityLabel.text = locationWeatherList[indexPath.row].todayWeather.humidity
             
-            cell.tomorrowWeatherLabel.text = locationWeather[indexPath.row].tomorrowWeather.weatherState
-            cell.tomorrowWeatherImageView.kf.setImage(with: URL(string: locationWeather[indexPath.row].tomorrowWeather.weatherImage))
-            cell.tomorrowTemperatureLabel.text = locationWeather[indexPath.row].tomorrowWeather.temperature
-            cell.tomorrowHumidityLabel.text = locationWeather[indexPath.row].tomorrowWeather.humidity
+            cell.tomorrowWeatherLabel.text = locationWeatherList[indexPath.row].tomorrowWeather.weatherState
+            cell.tomorrowWeatherImageView.kf.setImage(with: URL(string: locationWeatherList[indexPath.row].tomorrowWeather.weatherImage))
+            cell.tomorrowTemperatureLabel.text = locationWeatherList[indexPath.row].tomorrowWeather.temperature
+            cell.tomorrowHumidityLabel.text = locationWeatherList[indexPath.row].tomorrowWeather.humidity
         }
         
         return cell
