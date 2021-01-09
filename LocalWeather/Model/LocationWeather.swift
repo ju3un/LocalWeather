@@ -7,11 +7,15 @@
 
 import Foundation
 
-struct LocationWeather {
+class LocationWeather {
     let locationName: String
     
-    let todayWeather: WeatherModel
-    let tomorrowWeather: WeatherModel
+    var todayWeather: WeatherModel?
+    var tomorrowWeather: WeatherModel?
+    
+    init(locationName: String) {
+        self.locationName = locationName
+    }
 }
 
 struct WeatherModel {

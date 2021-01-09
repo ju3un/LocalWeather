@@ -99,15 +99,19 @@ extension WeatherViewController: UITableViewDataSource {
             
             cell.localLabel.text = locationWeatherList[indexPath.row].locationName
             
-            cell.todayWeatherLabel.text = locationWeatherList[indexPath.row].todayWeather.weatherState
-            cell.todayWeatherImageView.kf.setImage(with: URL(string: locationWeatherList[indexPath.row].todayWeather.weatherImage))
-            cell.todayTemperatureLabel.text = locationWeatherList[indexPath.row].todayWeather.temperature
-            cell.todayHumidityLabel.text = locationWeatherList[indexPath.row].todayWeather.humidity
+            if let todayWeather = locationWeatherList[indexPath.row].todayWeather {
+                cell.todayWeatherLabel.text =  todayWeather.weatherState
+                cell.todayWeatherImageView.kf.setImage(with: URL(string: todayWeather.weatherImage))
+                cell.todayTemperatureLabel.text = todayWeather.temperature
+                cell.todayHumidityLabel.text = todayWeather.humidity
+            }
             
-            cell.tomorrowWeatherLabel.text = locationWeatherList[indexPath.row].tomorrowWeather.weatherState
-            cell.tomorrowWeatherImageView.kf.setImage(with: URL(string: locationWeatherList[indexPath.row].tomorrowWeather.weatherImage))
-            cell.tomorrowTemperatureLabel.text = locationWeatherList[indexPath.row].tomorrowWeather.temperature
-            cell.tomorrowHumidityLabel.text = locationWeatherList[indexPath.row].tomorrowWeather.humidity
+            if let tomorrowWeather = locationWeatherList[indexPath.row].tomorrowWeather {
+                cell.tomorrowWeatherLabel.text = tomorrowWeather.weatherState
+                cell.tomorrowWeatherImageView.kf.setImage(with: URL(string: tomorrowWeather.weatherImage))
+                cell.tomorrowTemperatureLabel.text = tomorrowWeather.temperature
+                cell.tomorrowHumidityLabel.text = tomorrowWeather.humidity
+            }
         }
         
         return cell
