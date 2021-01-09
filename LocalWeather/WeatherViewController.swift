@@ -24,7 +24,7 @@ class WeatherViewController: UIViewController {
     }
     
     deinit {
-        //locations.removeAll()
+        locationWeather.removeAll()
     }
 }
 
@@ -37,18 +37,28 @@ extension WeatherViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "WeatherTableViewCell", for: indexPath) as! WeatherTableViewCell
         
-        cell.localLabel.text = locationWeather[indexPath.row].locationName
-        
-        cell.todayWeatherLabel.text = locationWeather[indexPath.row].todayWeather.weatherState
-        print(locationWeather[indexPath.row].todayWeather.weatherImage)
-        cell.todayWeatherImageView.kf.setImage(with: URL(string: locationWeather[indexPath.row].todayWeather.weatherImage))
-        cell.todayTemperatureLabel.text = locationWeather[indexPath.row].todayWeather.temperature
-        cell.todayHumidityLabel.text = locationWeather[indexPath.row].todayWeather.humidity
-        
-        cell.tomorrowWeatherLabel.text = locationWeather[indexPath.row].tomorrowWeather.weatherState
-        cell.tomorrowWeatherImageView.kf.setImage(with: URL(string: locationWeather[indexPath.row].tomorrowWeather.weatherImage))
-        cell.tomorrowTemperatureLabel.text = locationWeather[indexPath.row].tomorrowWeather.temperature
-        cell.tomorrowHumidityLabel.text = locationWeather[indexPath.row].tomorrowWeather.humidity
+        if indexPath.row == 0 {
+            cell.headerStackView.isHidden = false
+            cell.weatherStackView.isHidden = true
+            
+            cell.localLabel.text = locationWeather[indexPath.row].locationName
+        } else {
+            cell.headerStackView.isHidden = true
+            cell.weatherStackView.isHidden = false
+            
+            cell.localLabel.text = locationWeather[indexPath.row].locationName
+            
+            cell.todayWeatherLabel.text = locationWeather[indexPath.row].todayWeather.weatherState
+            print(locationWeather[indexPath.row].todayWeather.weatherImage)
+            cell.todayWeatherImageView.kf.setImage(with: URL(string: locationWeather[indexPath.row].todayWeather.weatherImage))
+            cell.todayTemperatureLabel.text = locationWeather[indexPath.row].todayWeather.temperature
+            cell.todayHumidityLabel.text = locationWeather[indexPath.row].todayWeather.humidity
+            
+            cell.tomorrowWeatherLabel.text = locationWeather[indexPath.row].tomorrowWeather.weatherState
+            cell.tomorrowWeatherImageView.kf.setImage(with: URL(string: locationWeather[indexPath.row].tomorrowWeather.weatherImage))
+            cell.tomorrowTemperatureLabel.text = locationWeather[indexPath.row].tomorrowWeather.temperature
+            cell.tomorrowHumidityLabel.text = locationWeather[indexPath.row].tomorrowWeather.humidity
+        }
         
         return cell
     }

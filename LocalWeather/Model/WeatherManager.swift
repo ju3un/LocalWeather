@@ -34,7 +34,7 @@ struct WeatherManager {
     }
     
     func requestWeather(locations: [Location]) {
-        var locationWeather: [LocationWeather] = []
+        var locationWeather: [LocationWeather] = [LocationWeather(locationName: "Local", todayWeather: WeatherModel(weatherState: "", weatherImage: "", temperature: "", humidity: ""), tomorrowWeather: WeatherModel(weatherState: "", weatherImage: "", temperature: "", humidity: ""))]
         for location in locations {
             AF.request(weatherUrl + String(location.woeid), method: .get).responseData { (response) in
                 switch response.result {

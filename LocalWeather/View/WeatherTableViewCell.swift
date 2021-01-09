@@ -9,6 +9,9 @@ import UIKit
 
 class WeatherTableViewCell: UITableViewCell {
     @IBOutlet weak var localLabel: UILabel!
+    @IBOutlet weak var headerStackView: UIStackView!
+    @IBOutlet weak var weatherStackView: UIStackView!
+    
     @IBOutlet weak var todayWeatherImageView: UIImageView!
     @IBOutlet weak var todayWeatherLabel: UILabel!
     @IBOutlet weak var todayTemperatureLabel: UILabel!

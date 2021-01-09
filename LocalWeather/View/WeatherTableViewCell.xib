@@ -17,16 +17,33 @@
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
                     <stackView opaque="NO" contentMode="scaleToFill" alignment="center" spacing="10" translatesAutoresizingMaskIntoConstraints="NO" id="KY0-9u-pdD">
-                        <rect key="frame" x="0.0" y="0.0" width="434" height="89"/>
+                        <rect key="frame" x="0.0" y="15" width="434" height="59"/>
                         <subviews>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="center" lineBreakMode="characterWrap" numberOfLines="3" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="T5Y-TZ-qmd">
-                                <rect key="frame" x="0.0" y="36" width="48" height="17"/>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Local" textAlignment="center" lineBreakMode="characterWrap" numberOfLines="3" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="T5Y-TZ-qmd">
+                                <rect key="frame" x="0.0" y="21" width="48" height="17"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <stackView opaque="NO" contentMode="scaleToFill" distribution="fillEqually" spacing="5" translatesAutoresizingMaskIntoConstraints="NO" id="096-fD-cVh">
-                                <rect key="frame" x="58" y="17" width="376" height="55"/>
+                            <stackView hidden="YES" opaque="NO" contentMode="scaleToFill" spacing="10" translatesAutoresizingMaskIntoConstraints="NO" id="JG0-9d-vRO" userLabel="Header Stack View">
+                                <rect key="frame" x="53" y="21" width="10" height="17"/>
+                                <subviews>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Today" textAlignment="center" lineBreakMode="characterWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="2Mw-Au-PXY">
+                                        <rect key="frame" x="0.0" y="0.0" width="0.0" height="17"/>
+                                        <fontDescription key="fontDescription" type="boldSystem" pointSize="14"/>
+                                        <nil key="textColor"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Tomorrow" textAlignment="center" lineBreakMode="characterWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="zd7-Wd-ArS">
+                                        <rect key="frame" x="10" y="0.0" width="0.0" height="17"/>
+                                        <fontDescription key="fontDescription" type="boldSystem" pointSize="14"/>
+                                        <nil key="textColor"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                </subviews>
+                            </stackView>
+                            <stackView opaque="NO" contentMode="scaleToFill" distribution="fillEqually" spacing="5" translatesAutoresizingMaskIntoConstraints="NO" id="096-fD-cVh" userLabel="Weather Stack View">
+                                <rect key="frame" x="58" y="2" width="376" height="55"/>
                                 <subviews>
                                     <stackView opaque="NO" contentMode="scaleToFill" spacing="5" translatesAutoresizingMaskIntoConstraints="NO" id="Z4r-dF-X3D" userLabel="Today Stack View">
                                         <rect key="frame" x="0.0" y="0.0" width="185.5" height="55"/>
@@ -165,8 +182,8 @@
                 </subviews>
                 <constraints>
                     <constraint firstAttribute="trailing" secondItem="KY0-9u-pdD" secondAttribute="trailing" id="ESM-G2-UOs"/>
-                    <constraint firstItem="KY0-9u-pdD" firstAttribute="top" secondItem="H2p-sc-9uM" secondAttribute="top" id="G6V-Z4-EPJ"/>
-                    <constraint firstAttribute="bottom" secondItem="KY0-9u-pdD" secondAttribute="bottom" id="GSG-oh-ZCJ"/>
+                    <constraint firstItem="KY0-9u-pdD" firstAttribute="top" secondItem="H2p-sc-9uM" secondAttribute="top" constant="15" id="G6V-Z4-EPJ"/>
+                    <constraint firstAttribute="bottom" secondItem="KY0-9u-pdD" secondAttribute="bottom" constant="15" id="GSG-oh-ZCJ"/>
                     <constraint firstItem="KY0-9u-pdD" firstAttribute="leading" secondItem="H2p-sc-9uM" secondAttribute="leading" id="ZZi-G8-f9P"/>
                     <constraint firstItem="T5Y-TZ-qmd" firstAttribute="width" secondItem="H2p-sc-9uM" secondAttribute="width" multiplier="1:9" id="aD0-kR-fu1"/>
                     <constraint firstItem="KY0-9u-pdD" firstAttribute="centerY" secondItem="H2p-sc-9uM" secondAttribute="centerY" id="nZQ-NW-sxI"/>
@@ -174,6 +191,7 @@
             </tableViewCellContentView>
             <viewLayoutGuide key="safeArea" id="njF-e1-oar"/>
             <connections>
+                <outlet property="headerStackView" destination="JG0-9d-vRO" id="CEd-xS-cfz"/>
                 <outlet property="localLabel" destination="T5Y-TZ-qmd" id="sDv-i7-7FF"/>
                 <outlet property="todayHumidityLabel" destination="Ocm-XI-b4d" id="Yqq-UU-klC"/>
                 <outlet property="todayTemperatureLabel" destination="6nV-5Q-IB6" id="Cva-0G-cSS"/>
@@ -183,6 +201,7 @@
                 <outlet property="tomorrowTemperatureLabel" destination="jDR-Zv-8Tn" id="UPT-xC-YxN"/>
                 <outlet property="tomorrowWeatherImageView" destination="XZG-Jf-iBn" id="JGp-9Y-sLT"/>
                 <outlet property="tomorrowWeatherLabel" destination="e3T-PB-vl1" id="SBD-Gw-FSj"/>
+                <outlet property="weatherStackView" destination="096-fD-cVh" id="tgt-qn-pbi"/>
             </connections>
             <point key="canvasLocation" x="47.826086956521742" y="102.79017857142857"/>
         </tableViewCell>
