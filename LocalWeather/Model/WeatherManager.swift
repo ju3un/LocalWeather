@@ -22,6 +22,7 @@ struct WeatherManager {
                 if let locations = locations {
                     var requestCount = 0
                     for location in locations {
+                        // alamofire 비동기라 우선 순서대로 담는 방법 선택
                         locationWeatherList.append(LocationWeather(locationName: location.name))
                         requestWeather(location: location) { (weatherData, error) in
                             requestCount += 1
