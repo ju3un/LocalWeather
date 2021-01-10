@@ -14,7 +14,7 @@ class WeatherViewController: UIViewController {
     var weatherManager = WeatherManager()
     var locationWeatherList: [LocationWeather] = []
     
-    let spinner = UIActivityIndicatorView()
+    var spinner: UIActivityIndicatorView? = UIActivityIndicatorView()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -30,7 +30,7 @@ class WeatherViewController: UIViewController {
             return refreshControl
         }()
         
-        spinner.startAnimating()
+        spinner?.startAnimating()
         weatherManager.fetchData { (locationWeather, error) in
             if let error = error {
                 let alert = UIAlertController(title: "응답 실패", message: "\(error.localizedDescription)\n재시도하시기 바랍니다.", preferredStyle: .alert)
@@ -42,20 +42,21 @@ class WeatherViewController: UIViewController {
                     self.locationWeatherList = locationWeather
                     self.weatherTableView.reloadData()
                 }
-                self.spinner.stopAnimating()
+                self.spinner?.stopAnimating()
             }
         }
     }
     
     deinit {
-        spinner.removeFromSuperview()
+        spinner?.removeFromSuperview()
+        spinner = nil
         locationWeatherList.removeAll()
     }
     
     func initSpinner() {
-        spinner.hidesWhenStopped = true
-        spinner.center = CGPoint(x:weatherTableView.bounds.size.width / 2, y:weatherTableView.bounds.size.height / 2)
-        weatherTableView.addSubview(spinner)
+        spinner?.hidesWhenStopped = true
+        spinner?.center = CGPoint(x:weatherTableView.bounds.size.width / 2, y:weatherTableView.bounds.size.height / 2)
+        weatherTableView.addSubview(spinner!)
     }
     
     @objc private func refresh(sender: UIRefreshControl) {

@@ -31,9 +31,9 @@ struct WeatherManager {
                                 completion(nil, error)
                             } else {
                                 if let weatherData = weatherData {
-                                    if weatherData.consolidatedWeather.count > 1 {
-                                        let todayWeather = weatherData.consolidatedWeather[0].toWeatherModel()
-                                        let tomorrowWeather = weatherData.consolidatedWeather[1].toWeatherModel()
+                                    if weatherData.weathers.count > 1 {
+                                        let todayWeather = weatherData.weathers[0].toWeatherModel()
+                                        let tomorrowWeather = weatherData.weathers[1].toWeatherModel()
                                         
                                         let locationWeather = locationWeatherList.filter { $0.locationName == location.name }
                                         locationWeather[0].todayWeather = todayWeather
