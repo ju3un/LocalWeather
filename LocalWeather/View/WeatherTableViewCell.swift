@@ -28,28 +28,13 @@ class WeatherTableViewCell: UITableViewCell {
     @IBOutlet weak var todayWeatherBorder: UIStackView!
     @IBOutlet weak var tomorrowWeatherBorder: UIStackView!
     
-    var borders: [UIView] = []
-    var bottomBorders: [UIView] = []
+    var reusableBorders: [UIView] = []
+    var specialBorders: [UIView] = []
     
     override func awakeFromNib() {
         super.awakeFromNib()
         
-        /// FIX_ME: 매우 비효율적인 방법이라고 생각된다..
-        for border in localLabelBorder.addBorder([.left, .top], color: UIColor.systemGray5, width: 1.0) {
-            borders.append(border)
-        }
-        for border in todayLabelBorder.addBorder([.left, .top], color: UIColor.systemGray5, width: 1.0) {
-            borders.append(border)
-        }
-        for border in tomorrowLabelBorder.addBorder([.left, .right, .top], color: UIColor.systemGray5, width: 1.0) {
-            borders.append(border)
-        }
-        for border in todayWeatherBorder.addBorder([.left, .top], color: UIColor.systemGray5, width: 1.0) {
-            borders.append(border)
-        }
-        for border in tomorrowWeatherBorder.addBorder([.left, .right, .top], color: UIColor.systemGray5, width: 1.0) {
-            borders.append(border)
-        }
+        initialize()
     }
 
     override func setSelected(_ selected: Bool, animated: Bool) {
@@ -58,32 +43,50 @@ class WeatherTableViewCell: UITableViewCell {
     }
     
     deinit {
-        for border in borders {
+        for border in reusableBorders {
             border.removeFromSuperview()
         }
-        for border in bottomBorders {
+        for border in specialBorders {
             border.removeFromSuperview()
         }
-        borders.removeAll()
-        bottomBorders.removeAll()
+        reusableBorders.removeAll()
+        specialBorders.removeAll()
+    }
+    
+    func initialize() {
+        borderDelegate = self
+        localLabelBorder.addBorder([.left, .top], color: UIColor.systemGray5, width: 1.0)
+        todayLabelBorder.addBorder([.left, .top], color: UIColor.systemGray5, width: 1.0)
+        tomorrowLabelBorder.addBorder([.left, .right, .top], color: UIColor.systemGray5, width: 1.0)
+        todayWeatherBorder.addBorder([.left, .top], color: UIColor.systemGray5, width: 1.0)
+        tomorrowWeatherBorder.addBorder([.left, .right, .top], color: UIColor.systemGray5, width: 1.0)
     }
     
     func addBottomBorder() {
-        for border in localLabelBorder.addBorder([.bottom], color: UIColor.systemGray5, width: 1.0) {
-            bottomBorders.append(border)
-        }
-        for border in todayWeatherBorder.addBorder([.bottom], color: UIColor.systemGray5, width: 1.0) {
-            bottomBorders.append(border)
-        }
-        for border in tomorrowWeatherBorder.addBorder([.bottom], color: UIColor.systemGray5, width: 1.0) {
-            bottomBorders.append(border)
+        if specialBorders.isEmpty {
+            localLabelBorder.addBorder([.bottom], color: UIColor.systemGray5, width: 1.0, reusable: false)
+            todayWeatherBorder.addBorder([.bottom], color: UIColor.systemGray5, width: 1.0, reusable: false)
+            tomorrowWeatherBorder.addBorder([.bottom], color: UIColor.systemGray5, width: 1.0, reusable: false)
         }
     }
     
     func removeBottomBorder() {
-        for border in bottomBorders {
-            border.removeFromSuperview()
+        if !specialBorders.isEmpty {
+            for border in specialBorders {
+                border.removeFromSuperview()
+            }
+            specialBorders.removeAll()
         }
-        bottomBorders.removeAll()
+    }
+}
+
+//MARK: - BorderDelegate
+extension WeatherTableViewCell: BorderDelegate {
+    func updatedBorder(with border: UIView, reusable: Bool) {
+        if reusable {
+            reusableBorders.append(border)
+        } else {
+            specialBorders.append(border)
+        }
     }
 }
