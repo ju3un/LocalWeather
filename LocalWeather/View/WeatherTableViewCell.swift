@@ -42,6 +42,12 @@ class WeatherTableViewCell: UITableViewCell {
         // Configure the view for the selected state
     }
     
+    override func prepareForReuse() {
+        super.prepareForReuse()
+        
+        self.removeBottomBorder()
+    }
+    
     deinit {
         for border in reusableBorders {
             border.removeFromSuperview()
@@ -63,11 +69,9 @@ class WeatherTableViewCell: UITableViewCell {
     }
     
     func addBottomBorder() {
-        if specialBorders.isEmpty {
-            localLabelBorder.addBorder([.bottom], color: UIColor.systemGray5, width: 1.0, reusable: false)
-            todayWeatherBorder.addBorder([.bottom], color: UIColor.systemGray5, width: 1.0, reusable: false)
-            tomorrowWeatherBorder.addBorder([.bottom], color: UIColor.systemGray5, width: 1.0, reusable: false)
-        }
+        localLabelBorder.addBorder([.bottom], color: UIColor.systemGray5, width: 1.0, reusable: false)
+        todayWeatherBorder.addBorder([.bottom], color: UIColor.systemGray5, width: 1.0, reusable: false)
+        tomorrowWeatherBorder.addBorder([.bottom], color: UIColor.systemGray5, width: 1.0, reusable: false)
     }
     
     func removeBottomBorder() {

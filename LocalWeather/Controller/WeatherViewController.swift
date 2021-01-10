@@ -89,12 +89,6 @@ extension WeatherViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "WeatherTableViewCell", for: indexPath) as! WeatherTableViewCell
         
-        if indexPath.row == locationWeatherList.count - 1 {
-            cell.addBottomBorder()
-        } else {
-            cell.removeBottomBorder()
-        }
-        
         if indexPath.row == 0 {
             cell.headerStackView.isHidden = false
             cell.weatherStackView.isHidden = true
@@ -120,6 +114,10 @@ extension WeatherViewController: UITableViewDataSource {
                 cell.tomorrowWeatherImageView.kf.setImage(with: URL(string: tomorrowWeather.weatherImage))
                 cell.tomorrowTemperatureLabel.text = tomorrowWeather.temperature
                 cell.tomorrowHumidityLabel.text = tomorrowWeather.humidity
+            }
+            
+            if indexPath.row == locationWeatherList.count - 1 {
+                cell.addBottomBorder()
             }
         }
         return cell
