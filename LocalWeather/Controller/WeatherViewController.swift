@@ -92,11 +92,13 @@ extension WeatherViewController: UITableViewDataSource {
             cell.headerStackView.isHidden = false
             cell.weatherStackView.isHidden = true
             
+            cell.backgroundColor = UIColor.systemGray6
             cell.localLabel.text = locationWeatherList[indexPath.row].locationName
         } else {
             cell.headerStackView.isHidden = true
             cell.weatherStackView.isHidden = false
             
+            cell.backgroundColor = .clear
             cell.localLabel.text = locationWeatherList[indexPath.row].locationName
             
             if let todayWeather = locationWeatherList[indexPath.row].todayWeather {
@@ -112,8 +114,13 @@ extension WeatherViewController: UITableViewDataSource {
                 cell.tomorrowTemperatureLabel.text = tomorrowWeather.temperature
                 cell.tomorrowHumidityLabel.text = tomorrowWeather.humidity
             }
+            
+            if indexPath.row == locationWeatherList.count - 1 {
+                cell.addBottomBorder()
+            } else {
+                cell.removeBottomBorder()
+            }
         }
-        
         return cell
     }
 }
